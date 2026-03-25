@@ -1,26 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 type QuestionCardProps = {
   question: string;
   options: string[];
   correctIndex: number;
-  onAnswer: (isCorrect: boolean) => void;
+  selectedAnswer: number | null;
+  onAnswer: (index: number) => void;
 };
 
-export default function QuestionCard({ question, options, correctIndex, onAnswer }: QuestionCardProps) {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  // 問題が変わったときに選択状態をリセットする
-  useEffect(() => {
-    setSelectedIndex(null);
-  }, [question]);
-
+export default function QuestionCard({ question, options, correctIndex, selectedAnswer, onAnswer }: QuestionCardProps) {
   const handleSelect = (index: number) => {
-    if (selectedIndex !== null) return; // すでに回答済みの場合は何もしない
-    setSelectedIndex(index);
-    onAnswer(index === correctIndex);
+    if (selectedAnswer !== null) return;
+    onAnswer(index);
   };
 
   return (
@@ -31,10 +22,10 @@ export default function QuestionCard({ question, options, correctIndex, onAnswer
       <div style={{ display: "flex", flexDirection: "column" }}>
         {options.map((option, index) => {
           let btnClass = "option-btn";
-          if (selectedIndex !== null) {
+          if (selectedAnswer !== null) {
             if (index === correctIndex) {
               btnClass += " option-correct";
-            } else if (index === selectedIndex) {
+            } else if (index === selectedAnswer) {
               btnClass += " option-incorrect";
             }
           }
@@ -44,7 +35,7 @@ export default function QuestionCard({ question, options, correctIndex, onAnswer
               key={index}
               className={btnClass}
               onClick={() => handleSelect(index)}
-              disabled={selectedIndex !== null}
+              disabled={selectedAnswer !== null}
             >
               {option}
             </button>
