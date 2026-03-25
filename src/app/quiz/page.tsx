@@ -20,7 +20,7 @@ export default function QuizPage() {
   const isCorrect = currentAnswer === currentQuestion.correctIndex;
 
   // 動的にスコアを計算
-  const score = answers.reduce((acc, ans, index) => {
+  const score = answers.reduce<number>((acc, ans, index) => {
     return acc + (ans === questionsData[index].correctIndex ? 1 : 0);
   }, 0);
 
